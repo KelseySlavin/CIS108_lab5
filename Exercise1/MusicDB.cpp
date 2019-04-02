@@ -2,54 +2,80 @@
 #include <iostream>
 #include <string>
 #include "Song.h"
+#include <vector>
 
 using namespace std;
 
-namespace music_database_CRUD
+namespace MusicDB
 {
-	std::string filename = "Mymusic.txt";
-	std::string Create_song_entry(music song)
-	{
-		try
-		{
-			
-			std::ofstream file(filename, ios::app);
-			file << song.title <<","<<song.artist<<","<<song.album<<","<<song.track<<","<<song.year<<"\n";
-			file.close();
-			return "success";
-		}
-		catch(exception ex)
-		{
-			return "Something went wrong. Please try again.";
-		}
+	//a list of songs managed by MusicDB
+	vector<Song> song_list;
 
+
+	//add song to the database
+	void addsong(Song song)
+	{
+		song_list.push_back(song);
 	}
-	/*std::string create; 
-	std::string line;
-	std::ifstream file("myfile.txt");*/
 
-	string read_song ()
+	//return the total number of songs in the database
+	int gettotalsongs()
 	{
-		//try
-		//{
-			string line; 
-			std::ifstream file(filename); 
-			while (std::getline(file, line)){
+		return song_list.size();
+	}
+
+	//returns a song from the database by index
+	Song getsong(int index)
+	{
+		return song_list[index];
+	}
+
+	//load sing database from file
+	void loadsongsfromfile(string filename)
+	{
+		//clear the database to make sure that theres nothing in it before we get music
+		song_list.clear();
+
+		ifstream ghost(filename, ifstream::binary);
+		if (ghost.is_open())
+		{
+			int total_songs = 0;
+			ghost.read((char*)&total_songs, sizeof(int));
+
+			for (int idx = 0; idx < total_songs; idx++);
 			{
-				cout << line << '\n';
+				Song pepper;
+				ghost.read((char*)&pepper, sizeof(Song));
+				song_list.push_back(pepper);
 			}
-			return "foo";
+			ghost.close();
 
-		//}
-		//catch (exception ex)
-		/*{
-			return music {"","","",0,0};
-		*/}
+		}
 	}
 
+	//save the song database to the file
+	void savesongtofile(string filename)
+	{
+		ofstream file (filename, ofstream::binary);
+		if (file.is_open())
+		{
+			int total_songs = gettotalsongs();
+			file.write((char*)&total_songs, sizeof(int));
+
+			for (int idx = 0; idx < total_songs; idx++)
+			{
+				Song aligator = getsong(idx);
+				file.write((char*)&aligator, sizeof(Song));
+			}
+
+			file.close();
+		}
+
+	}
 
 
 }
+
 
 
 

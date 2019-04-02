@@ -1,16 +1,8 @@
 #pragma once
 
-struct music
+enum Genre		//have to make the "genre" function before you can call it at the bottom
 {
-	char title[64];
-	char artist[32];
-	char album[64];
-	int track;
-	int year;
-};
-enum genre
-{
-	blues=1,
+	blues = 0,
 	country,
 	electronic,
 	folk,
@@ -20,3 +12,19 @@ enum genre
 	pop,
 	rock
 };
+
+const int MAX_CHARS_PER_TITLE = 64;
+const int MAX_CHARS_PER_ARTIST = 64;
+const int MAX_CHARS_ALBUM = 64;
+
+
+struct Song
+{
+	char title[MAX_CHARS_PER_TITLE];
+	char artist[MAX_CHARS_PER_ARTIST];
+	char album[MAX_CHARS_ALBUM];
+	unsigned int track;
+	unsigned int year;
+	Genre genre;
+};
+
